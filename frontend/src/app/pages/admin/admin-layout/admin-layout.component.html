@@ -1,0 +1,83 @@
+<mat-sidenav-container class="admin-container">
+
+  <!-- Sidebar -->
+  <mat-sidenav
+    [opened]="sidenavOpen()"
+    mode="side"
+    class="admin-sidenav">
+
+    <!-- Sidebar Header -->
+    <div class="sidenav-header">
+      <mat-icon class="brand-icon">school</mat-icon>
+      <div class="brand-text">
+        <span class="brand-name">DSU Admin</span>
+        <span class="brand-sub">Daily Student Updates</span>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Nav Items -->
+    <mat-nav-list class="nav-list">
+      @for (item of navItems; track item.route) {
+        <a mat-list-item
+           [routerLink]="item.route"
+           [class.active]="isActive(item.route)"
+           class="nav-item">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+      }
+    </mat-nav-list>
+
+    <mat-divider></mat-divider>
+
+    <!-- Bottom: Go to Website -->
+    <mat-nav-list>
+      <a mat-list-item routerLink="/" class="nav-item nav-website">
+        <mat-icon matListItemIcon>open_in_new</mat-icon>
+        <span matListItemTitle>View Website</span>
+      </a>
+    </mat-nav-list>
+
+  </mat-sidenav>
+
+  <!-- Main Content -->
+  <mat-sidenav-content class="admin-content">
+
+    <!-- Top Toolbar -->
+    <mat-toolbar class="admin-toolbar" color="primary">
+      <button mat-icon-button (click)="toggleSidenav()" matTooltip="Toggle menu">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <span class="toolbar-spacer"></span>
+
+      <!-- Admin Menu -->
+      <button mat-button [matMenuTriggerFor]="adminMenu" class="admin-user-btn">
+        <mat-icon>account_circle</mat-icon>
+        <span class="admin-name">{{ currentAdmin()?.username || 'Admin' }}</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+
+      <mat-menu #adminMenu="matMenu">
+        <div class="menu-header">
+          <strong>{{ currentAdmin()?.username }}</strong>
+          <small>{{ currentAdmin()?.email }}</small>
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    </mat-toolbar>
+
+    <!-- Page Content -->
+    <div class="page-content">
+      <router-outlet></router-outlet>
+    </div>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["src/app/shared/components/search-bar/search-bar.component.scss"],
+  "sourcesContent": [".search-bar-wrapper {\r\n  width: 100%;\r\n}\r\n\r\n.search-field {\r\n  width: 100%;\r\n\r\n  ::ng-deep {\r\n    .mat-mdc-text-field-wrapper {\r\n      border-radius: 50px !important;\r\n      background: white;\r\n    }\r\n\r\n    .mat-mdc-form-field-outline {\r\n      border-radius: 50px !important;\r\n    }\r\n\r\n    .mdc-notched-outline__leading {\r\n      border-radius: 50px 0 0 50px !important;\r\n    }\r\n\r\n    .mdc-notched-outline__trailing {\r\n      border-radius: 0 50px 50px 0 !important;\r\n    }\r\n  }\r\n}\r\n"],
+  "mappings": ";AAAA,CAAA;AACE,SAAA;;AAGF,CAAA;AACE,SAAA;;AAGE,CAJJ,aAII,UAAA,CAAA;AACE,iBAAA;AACA,cAAA;;AAGF,CATJ,aASI,UAAA,CAAA;AACE,iBAAA;;AAGF,CAbJ,aAaI,UAAA,CAAA;AACE,iBAAA,KAAA,EAAA,EAAA;;AAGF,CAjBJ,aAiBI,UAAA,CAAA;AACE,iBAAA,EAAA,KAAA,KAAA;;",
+  "names": []
+}

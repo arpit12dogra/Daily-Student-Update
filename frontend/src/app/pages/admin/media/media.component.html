@@ -1,0 +1,152 @@
+<div class="media">
+
+  <!-- Header -->
+  <div class="page-header-row">
+    <div>
+      <h1><mat-icon>perm_media</mat-icon> Media Library</h1>
+      <p>{{ totalItems() }} files</p>
+    </div>
+  </div>
+
+  <!-- Upload Area -->
+  <div class="upload-section">
+
+    <!-- Image Upload -->
+    <mat-card class="upload-card"
+              (dragover)="onDragOver($event)"
+              (drop)="onImageDrop($event)"
+              (click)="imageInput.click()">
+      <mat-card-content>
+        <mat-icon class="upload-icon">add_photo_alternate</mat-icon>
+        <h3>Upload Images</h3>
+        <p>Click or drag & drop JPG, PNG, WebP</p>
+        @if (imageUploading()) {
+          <mat-progress-bar mode="determinate" [value]="imageProgress()"></mat-progress-bar>
+          <span class="progress-text">{{ imageProgress() }}%</span>
+        }
+      </mat-card-content>
+    </mat-card>
+    <input #imageInput type="file" accept="image/*" hidden (change)="onImageSelect($event)" multiple>
+
+    <!-- PDF Upload -->
+    <mat-card class="upload-card upload-pdf" (click)="pdfInput.click()">
+      <mat-card-content>
+        <mat-icon class="upload-icon">upload_file</mat-icon>
+        <h3>Upload PDFs</h3>
+        <p>Click to upload PDF files</p>
+        @if (pdfUploading()) {
+          <mat-progress-bar mode="determinate" [value]="pdfProgress()"></mat-progress-bar>
+          <span class="progress-text">{{ pdfProgress() }}%</span>
+        }
+      </mat-card-content>
+    </mat-card>
+    <input #pdfInput type="file" accept=".pdf" hidden (change)="onPdfSelect($event)">
+
+  </div>
+
+  <!-- Media Grid -->
+  <mat-card class="media-card">
+    <mat-card-header>
+      <mat-card-title>All Files</mat-card-title>
+    </mat-card-header>
+
+    @if (loading()) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+
+    <mat-card-content>
+      @if (!loading() && mediaFiles().length === 0) {
+        <div class="empty-state">
+          <mat-icon>photo_library</mat-icon>
+          <h3>No files yet</h3>
+          <p>Upload images and PDFs using the upload area above</p>
+        </div>
+      } @else {
+        <div class="media-grid">
+          @for (file of mediaFiles(); track file._id) {
+            <div class="media-item" [class.selected]="selectedFile()?._id === file._id"
+                 (click)="selectedFile.set(file)">
+
+              @if (isImage(file)) {
+                <div class="media-thumb">
+                  <img [src]="file.thumbnailUrl || file.url" [alt]="file.originalName" loading="lazy">
+                </div>
+              } @else {
+                <div class="media-thumb media-pdf-thumb">
+                  <mat-icon>picture_as_pdf</mat-icon>
+                </div>
+              }
+
+              <div class="media-info">
+                <span class="media-name" [title]="file.originalName">{{ file.originalName }}</span>
+                <span class="media-size">{{ formatSize(file.size) }}</span>
+              </div>
+
+              <div class="media-actions">
+                <button mat-icon-button (click)="copyUrl(file); $event.stopPropagation()" matTooltip="Copy URL">
+                  <mat-icon>content_copy</mat-icon>
+                </button>
+                <a mat-icon-button [href]="file.url" target="_blank" (click)="$event.stopPropagation()" matTooltip="Open">
+                  <mat-icon>open_in_new</mat-icon>
+                </a>
+                <button mat-icon-button color="warn" (click)="deleteFile(file); $event.stopPropagation()" matTooltip="Delete">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+
+            </div>
+          }
+        </div>
+      }
+    </mat-card-content>
+
+    <mat-paginator
+      [length]="totalItems()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="[20, 50, 100]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons>
+    </mat-paginator>
+
+  </mat-card>
+
+  <!-- Selected File Detail Panel -->
+  @if (selectedFile()) {
+    <mat-card class="detail-panel">
+      <mat-card-header>
+        <mat-card-title>File Details</mat-card-title>
+        <button mat-icon-button (click)="selectedFile.set(null)" class="close-btn">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content>
+        @if (isImage(selectedFile()!)) {
+          <img [src]="selectedFile()!.url" [alt]="selectedFile()!.originalName" class="detail-preview">
+        } @else {
+          <div class="detail-pdf">
+            <mat-icon>picture_as_pdf</mat-icon>
+          </div>
+        }
+        <div class="detail-info">
+          <div class="detail-row"><strong>Name:</strong> {{ selectedFile()!.originalName }}</div>
+          <div class="detail-row"><strong>Type:</strong> {{ selectedFile()!.mimetype }}</div>
+          <div class="detail-row"><strong>Size:</strong> {{ formatSize(selectedFile()!.size) }}</div>
+          <div class="detail-row"><strong>Date:</strong> {{ selectedFile()!.createdAt | date:'d MMM yyyy' }}</div>
+          <div class="detail-url">
+            <strong>URL:</strong>
+            <span class="url-text">{{ selectedFile()!.url }}</span>
+          </div>
+        </div>
+        <div class="detail-actions">
+          <button mat-raised-button color="primary" (click)="copyUrl(selectedFile()!)">
+            <mat-icon>content_copy</mat-icon> Copy URL
+          </button>
+          <a mat-stroked-button [href]="selectedFile()!.url" target="_blank">
+            <mat-icon>open_in_new</mat-icon> Open
+          </a>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
+
+</div>

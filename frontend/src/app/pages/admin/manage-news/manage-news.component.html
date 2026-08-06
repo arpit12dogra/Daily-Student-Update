@@ -1,0 +1,166 @@
+<div class="manage-news">
+
+  <!-- Header -->
+  <div class="page-header-row">
+    <div>
+      <h1><mat-icon>newspaper</mat-icon> Manage News</h1>
+      <p>{{ totalItems() }} total articles</p>
+    </div>
+    <a mat-raised-button color="primary" routerLink="/admin/add-news">
+      <mat-icon>add</mat-icon> Add News
+    </a>
+  </div>
+
+  <!-- Filters -->
+  <mat-card class="filter-card">
+    <mat-card-content>
+      <div class="filters">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search news...</mat-label>
+          <input matInput [(ngModel)]="searchTerm" (keyup.enter)="onSearch()" placeholder="Title, content...">
+          <mat-icon matSuffix (click)="onSearch()" style="cursor:pointer">search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Category</mat-label>
+          <mat-select [(ngModel)]="selectedCategory" (selectionChange)="onSearch()">
+            <mat-option value="">All Categories</mat-option>
+            @for (cat of categories(); track cat._id) {
+              <mat-option [value]="cat._id">{{ cat.name }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <button mat-stroked-button (click)="clearFilters()">
+          <mat-icon>clear</mat-icon> Clear
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Table -->
+  <mat-card class="table-card">
+    @if (loading()) {
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    }
+
+    <div class="table-wrapper">
+      <table mat-table [dataSource]="newsList()" class="news-table">
+
+        <!-- Title Column -->
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef>Title</th>
+          <td mat-cell *matCellDef="let news">
+            <div class="title-cell">
+              @if (news.imageUrl) {
+                <img [src]="news.imageUrl" [alt]="news.title" class="news-thumb">
+              } @else {
+                <div class="news-thumb news-thumb-placeholder">
+                  <mat-icon>image</mat-icon>
+                </div>
+              }
+              <div>
+                <div class="news-title">{{ news.title }}</div>
+                <div class="news-excerpt">{{ news.excerpt | slice:0:60 }}...</div>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Category Column -->
+        <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef>Category</th>
+          <td mat-cell *matCellDef="let news">
+            <span class="cat-chip">{{ getCategoryName(news) }}</span>
+          </td>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let news">
+            <div class="status-badges">
+              <span [class]="'badge ' + (news.isPublished ? 'badge-success' : 'badge-draft')">
+                {{ news.isPublished ? 'Published' : 'Draft' }}
+              </span>
+              @if (news.isFeatured) {
+                <span class="badge badge-featured">⭐ Featured</span>
+              }
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Views Column -->
+        <ng-container matColumnDef="views">
+          <th mat-header-cell *matHeaderCellDef>Views</th>
+          <td mat-cell *matCellDef="let news">
+            <span class="views-count">
+              <mat-icon>visibility</mat-icon> {{ news.viewCount || 0 }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Date Column -->
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>Date</th>
+          <td mat-cell *matCellDef="let news">
+            {{ news.createdAt | date:'d MMM yyyy' }}
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let news">
+            <div class="actions-cell">
+              <button mat-icon-button color="primary"
+                      [routerLink]="['/admin/edit-news', news._id]"
+                      matTooltip="Edit">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button
+                      [color]="news.isPublished ? 'warn' : 'accent'"
+                      (click)="togglePublish(news)"
+                      [matTooltip]="news.isPublished ? 'Unpublish' : 'Publish'">
+                <mat-icon>{{ news.isPublished ? 'unpublished' : 'publish' }}</mat-icon>
+              </button>
+              <button mat-icon-button
+                      [color]="news.isFeatured ? 'accent' : ''"
+                      (click)="toggleFeatured(news)"
+                      matTooltip="Toggle Featured">
+                <mat-icon>{{ news.isFeatured ? 'star' : 'star_border' }}</mat-icon>
+              </button>
+              <button mat-icon-button color="warn"
+                      (click)="deleteNews(news)"
+                      matTooltip="Delete">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      </table>
+    </div>
+
+    @if (!loading() && newsList().length === 0) {
+      <div class="empty-state">
+        <mat-icon>inbox</mat-icon>
+        <h3>No news found</h3>
+        <p>Try different filters or <a routerLink="/admin/add-news">add new news</a></p>
+      </div>
+    }
+
+    <mat-paginator
+      [length]="totalItems()"
+      [pageSize]="pageSize()"
+      [pageSizeOptions]="[5, 10, 25, 50]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons>
+    </mat-paginator>
+
+  </mat-card>
+
+</div>

@@ -1,0 +1,237 @@
+<div class="add-news">
+
+  <!-- Header -->
+  <div class="page-header-row">
+    <div>
+      <h1>
+        <mat-icon>{{ isEditMode() ? 'edit' : 'add_circle' }}</mat-icon>
+        {{ isEditMode() ? 'Edit News' : 'Add News' }}
+      </h1>
+      <p>{{ isEditMode() ? 'Update the news article' : 'Create a new news article for students' }}</p>
+    </div>
+    <div class="header-actions">
+      <a mat-stroked-button routerLink="/admin/manage-news">
+        <mat-icon>arrow_back</mat-icon> Back
+      </a>
+    </div>
+  </div>
+
+  <form [formGroup]="newsForm" (ngSubmit)="onSubmit()">
+    <div class="form-grid">
+
+      <!-- Left: Main Content -->
+      <div class="form-main">
+
+        <!-- Basic Info -->
+        <mat-card class="form-card">
+          <mat-card-header>
+            <mat-card-title>Basic Information</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>News Title *</mat-label>
+              <input matInput formControlName="title" placeholder="Enter a clear, descriptive title">
+              @if (newsForm.get('title')?.hasError('required') && newsForm.get('title')?.touched) {
+                <mat-error>Title is required</mat-error>
+              }
+              @if (newsForm.get('title')?.hasError('minlength') && newsForm.get('title')?.touched) {
+                <mat-error>Title must be at least 5 characters</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Short Excerpt *</mat-label>
+              <textarea matInput formControlName="excerpt" rows="2"
+                        placeholder="Brief summary shown in news cards (20-150 characters)"></textarea>
+              @if (newsForm.get('excerpt')?.hasError('required') && newsForm.get('excerpt')?.touched) {
+                <mat-error>Excerpt is required</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Full Content *</mat-label>
+              <textarea matInput formControlName="content" rows="10"
+                        placeholder="Full article content..."></textarea>
+              @if (newsForm.get('content')?.hasError('required') && newsForm.get('content')?.touched) {
+                <mat-error>Content is required</mat-error>
+              }
+            </mat-form-field>
+
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Image Upload -->
+        <mat-card class="form-card">
+          <mat-card-header>
+            <mat-card-title>Featured Image</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+
+            @if (imagePreview()) {
+              <div class="image-preview">
+                <img [src]="imagePreview()" alt="Preview">
+                <button mat-icon-button class="remove-image-btn" type="button" (click)="removeImage()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            } @else {
+              <div class="upload-zone" (click)="imageInput.click()">
+                <mat-icon>cloud_upload</mat-icon>
+                <p>Click to upload image</p>
+                <small>JPG, PNG, WebP — Max 5MB</small>
+              </div>
+            }
+
+            <input #imageInput type="file" accept="image/*" hidden (change)="onImageSelect($event)">
+
+            @if (imageUploading()) {
+              <div class="upload-progress">
+                <span>Uploading image... {{ imageProgress() }}%</span>
+                <mat-progress-bar mode="determinate" [value]="imageProgress()"></mat-progress-bar>
+              </div>
+            }
+
+            @if (!imagePreview()) {
+              <button mat-stroked-button type="button" (click)="imageInput.click()" style="margin-top:12px">
+                <mat-icon>upload</mat-icon> Choose Image
+              </button>
+            }
+
+          </mat-card-content>
+        </mat-card>
+
+        <!-- PDF Upload -->
+        <mat-card class="form-card">
+          <mat-card-header>
+            <mat-card-title>PDF Attachment</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+
+            @if (newsForm.get('pdfUrl')?.value) {
+              <div class="pdf-uploaded">
+                <mat-icon>picture_as_pdf</mat-icon>
+                <span>PDF attached</span>
+                <a [href]="newsForm.get('pdfUrl')?.value" target="_blank" mat-icon-button>
+                  <mat-icon>open_in_new</mat-icon>
+                </a>
+                <button mat-icon-button type="button" (click)="newsForm.patchValue({pdfUrl: ''})">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            } @else {
+              <button mat-stroked-button type="button" (click)="pdfInput.click()">
+                <mat-icon>upload_file</mat-icon> Upload PDF
+              </button>
+            }
+
+            <input #pdfInput type="file" accept=".pdf" hidden (change)="onPdfSelect($event)">
+
+            @if (pdfUploading()) {
+              <div class="upload-progress">
+                <span>Uploading PDF... {{ pdfProgress() }}%</span>
+                <mat-progress-bar mode="determinate" [value]="pdfProgress()"></mat-progress-bar>
+              </div>
+            }
+
+          </mat-card-content>
+        </mat-card>
+
+      </div>
+
+      <!-- Right: Meta -->
+      <div class="form-sidebar">
+
+        <!-- Publish Settings -->
+        <mat-card class="form-card">
+          <mat-card-header>
+            <mat-card-title>Publish Settings</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+
+            <div class="toggle-row">
+              <div>
+                <p class="toggle-label">Publish</p>
+                <small>Make visible to students</small>
+              </div>
+              <mat-slide-toggle formControlName="isPublished" color="primary"></mat-slide-toggle>
+            </div>
+
+            <mat-divider class="my-divider"></mat-divider>
+
+            <div class="toggle-row">
+              <div>
+                <p class="toggle-label">Featured</p>
+                <small>Show in featured section</small>
+              </div>
+              <mat-slide-toggle formControlName="isFeatured" color="accent"></mat-slide-toggle>
+            </div>
+
+            <mat-divider class="my-divider"></mat-divider>
+
+            <mat-form-field appearance="outline" class="full-width" style="margin-top:12px">
+              <mat-label>Category *</mat-label>
+              <mat-select formControlName="categoryId">
+                @for (cat of categories(); track cat._id) {
+                  <mat-option [value]="cat._id">{{ cat.name }}</mat-option>
+                }
+              </mat-select>
+              @if (newsForm.get('categoryId')?.hasError('required') && newsForm.get('categoryId')?.touched) {
+                <mat-error>Category is required</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Author</mat-label>
+              <input matInput formControlName="author">
+            </mat-form-field>
+
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Tags -->
+        <mat-card class="form-card">
+          <mat-card-header>
+            <mat-card-title>Tags</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+
+            <mat-chip-grid #chipGrid>
+              @for (tag of tags; track tag) {
+                <mat-chip-row (removed)="removeTag(tag)">
+                  {{ tag }}
+                  <button matChipRemove>
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                </mat-chip-row>
+              }
+            </mat-chip-grid>
+
+            <mat-form-field appearance="outline" class="full-width" style="margin-top:8px">
+              <mat-label>Add tag</mat-label>
+              <input matInput
+                     placeholder="Type & press Enter"
+                     [matChipInputFor]="chipGrid"
+                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                     (matChipInputTokenEnd)="addTag($event)">
+            </mat-form-field>
+
+          </mat-card-content>
+        </mat-card>
+
+        <!-- Submit -->
+        <div class="submit-actions">
+          <button mat-raised-button color="primary" type="submit"
+                  class="submit-btn" [disabled]="loading()">
+            <ng-container [ngTemplateOutlet]="loading() ? savingTpl : submitTpl"></ng-container>
+          </button>
+          <ng-template #savingTpl>⏳ Saving...</ng-template>
+          <ng-template #submitTpl>{{ isEditMode() ? '💾 Update News' : '🚀 Publish News' }}</ng-template>
+          <a mat-stroked-button routerLink="/admin/manage-news" class="cancel-btn">Cancel</a>
+        </div>
+
+      </div>
+    </div>
+  </form>
+
+</div>

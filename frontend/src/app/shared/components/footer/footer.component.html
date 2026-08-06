@@ -1,0 +1,93 @@
+<footer class="footer">
+  <div class="footer-main">
+    <div class="container">
+      <div class="row">
+        <!-- Brand -->
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="footer-brand">
+            <mat-icon class="brand-icon">school</mat-icon>
+            <h3>Daily Student Updates</h3>
+          </div>
+          <p class="footer-desc">
+            Your go-to source for the latest school news, notices, events, and important announcements.
+            Stay connected with your school community.
+          </p>
+          <div class="social-links">
+            @for (social of socialLinks; track social.label) {
+              <a [href]="social.url" [attr.aria-label]="social.label" class="social-link">
+                <mat-icon>{{ social.icon }}</mat-icon>
+              </a>
+            }
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="col-lg-2 col-md-6 mb-4">
+          <h4 class="footer-heading">Quick Links</h4>
+          <ul class="footer-links">
+            @for (link of quickLinks; track link.path) {
+              <li>
+                <a [routerLink]="link.path">
+                  <mat-icon>chevron_right</mat-icon>
+                  {{ link.label }}
+                </a>
+              </li>
+            }
+          </ul>
+        </div>
+
+        <!-- Contact Info -->
+        <div class="col-lg-3 col-md-6 mb-4">
+          <h4 class="footer-heading">Contact Info</h4>
+          <ul class="contact-info">
+            <li>
+              <mat-icon>location_on</mat-icon>
+              <span>123 School Road, Education City, ST 12345</span>
+            </li>
+            <li>
+              <mat-icon>phone</mat-icon>
+              <span>+1 (234) 567-8900</span>
+            </li>
+            <li>
+              <mat-icon>email</mat-icon>
+              <span>info&#64;dailystudentupdates.com</span>
+            </li>
+            <li>
+              <mat-icon>access_time</mat-icon>
+              <span>Mon - Fri: 8:00 AM - 4:00 PM</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="col-lg-3 col-md-6 mb-4">
+          <h4 class="footer-heading">Stay Updated</h4>
+          <p class="newsletter-text">Subscribe to receive the latest news and notices directly to your inbox.</p>
+          <div class="newsletter-form">
+            <input type="email" placeholder="Enter your email" class="newsletter-input">
+            <button mat-flat-button color="accent" class="newsletter-btn">
+              Subscribe
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="footer-bottom">
+    <div class="container">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <p>&copy; {{ currentYear }} Daily Student Updates. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <span>|</span>
+          <a href="#">Terms of Service</a>
+          <span>|</span>
+          <a routerLink="/admin/login">Admin</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

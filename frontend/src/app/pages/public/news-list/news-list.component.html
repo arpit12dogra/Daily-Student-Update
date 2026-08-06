@@ -1,0 +1,126 @@
+<!-- Page Header -->
+<div class="page-header">
+  <div class="container">
+    <h1>
+      <mat-icon>article</mat-icon>
+      {{ selectedCategory ? getCategoryName(selectedCategory) : 'All News' }}
+    </h1>
+    <p>Stay informed with the latest updates from your school</p>
+  </div>
+</div>
+
+<div class="news-list-page">
+  <div class="container">
+    <div class="row">
+      <!-- Filters Sidebar -->
+      <div class="col-lg-3 mb-4">
+        <div class="filters-panel">
+          <h3 class="filter-title">
+            <mat-icon>filter_list</mat-icon>
+            Filters
+          </h3>
+
+          <!-- Search -->
+          <div class="filter-section">
+            <label class="filter-label">Search</label>
+            <app-search-bar
+              [initialValue]="searchQuery"
+              (searchChanged)="onSearch($event)">
+            </app-search-bar>
+          </div>
+
+          <!-- Categories -->
+          <div class="filter-section">
+            <label class="filter-label">Category</label>
+            <div class="category-filters">
+              <button class="cat-filter-btn"
+                      [class.active]="selectedCategory === ''"
+                      (click)="onCategoryChange('')">
+                All
+              </button>
+              @for (cat of categories; track cat._id) {
+                <button class="cat-filter-btn"
+                        [class.active]="selectedCategory === cat.slug"
+                        [style.border-color]="selectedCategory === cat.slug ? cat.color : ''"
+                        [style.background]="selectedCategory === cat.slug ? cat.color + '20' : ''"
+                        [style.color]="selectedCategory === cat.slug ? cat.color : ''"
+                        (click)="onCategoryChange(cat.slug)">
+                  <mat-icon [style.color]="cat.color" style="font-size:14px">{{ cat.icon }}</mat-icon>
+                  {{ cat.name }}
+                </button>
+              }
+            </div>
+          </div>
+
+          <!-- Sort -->
+          <div class="filter-section">
+            <label class="filter-label">Sort By</label>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-select [(ngModel)]="sortBy" (ngModelChange)="onSortChange()">
+                @for (opt of sortOptions; track opt.value) {
+                  <mat-option [value]="opt.value">{{ opt.label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <!-- News Grid -->
+      <div class="col-lg-9">
+        <!-- Active Filters -->
+        @if (searchQuery || selectedCategory) {
+          <div class="active-filters mb-3">
+            <span class="filters-label">Active filters:</span>
+            @if (searchQuery) {
+              <mat-chip (removed)="onSearch('')" [removable]="true">
+                Search: {{ searchQuery }}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+            }
+            @if (selectedCategory) {
+              <mat-chip (removed)="onCategoryChange('')" [removable]="true">
+                {{ getCategoryName(selectedCategory) }}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+            }
+          </div>
+        }
+
+        @if (isLoading) {
+          <div class="row g-3">
+            @for (i of [1,2,3,4,5,6]; track i) {
+              <div class="col-md-6 col-lg-4">
+                <div class="skeleton-news-card"></div>
+              </div>
+            }
+          </div>
+        } @else if (news.length > 0) {
+          <div class="row g-3">
+            @for (item of news; track item._id) {
+              <div class="col-md-6 col-lg-4">
+                <app-news-card [news]="item"></app-news-card>
+              </div>
+            }
+          </div>
+
+          @if (pagination) {
+            <app-pagination
+              [pagination]="pagination"
+              (pageChanged)="onPageChange($event)">
+            </app-pagination>
+          }
+        } @else {
+          <div class="empty-results">
+            <mat-icon>search_off</mat-icon>
+            <h3>No news found</h3>
+            <p>Try adjusting your search or filter criteria</p>
+            <button mat-stroked-button color="primary" (click)="onSearch(''); onCategoryChange('')">
+              Clear Filters
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

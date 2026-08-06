@@ -1,0 +1,164 @@
+<div class="categories">
+
+  <!-- Header -->
+  <div class="page-header-row">
+    <div>
+      <h1><mat-icon>category</mat-icon> Categories</h1>
+      <p>{{ categories().length }} categories</p>
+    </div>
+    <button mat-raised-button color="primary" (click)="openAddForm()">
+      <mat-icon>add</mat-icon> Add Category
+    </button>
+  </div>
+
+  <div class="content-grid">
+
+    <!-- Table -->
+    <mat-card class="table-card">
+      @if (loading()) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      }
+      <div class="table-wrapper">
+        <table mat-table [dataSource]="categories()" class="cat-table">
+
+          <!-- Color Column -->
+          <ng-container matColumnDef="color">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let cat">
+              <div class="color-swatch" [style.background]="cat.color"></div>
+            </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Name</th>
+            <td mat-cell *matCellDef="let cat">
+              <span class="cat-name">{{ cat.name }}</span>
+              @if (cat.description) {
+                <div class="cat-desc">{{ cat.description }}</div>
+              }
+            </td>
+          </ng-container>
+
+          <!-- Icon Column -->
+          <ng-container matColumnDef="icon">
+            <th mat-header-cell *matHeaderCellDef>Icon</th>
+            <td mat-cell *matCellDef="let cat">
+              <div class="icon-preview" [style.background]="cat.color + '20'" [style.color]="cat.color">
+                <mat-icon>{{ cat.icon }}</mat-icon>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- News Count -->
+          <ng-container matColumnDef="news">
+            <th mat-header-cell *matHeaderCellDef>News</th>
+            <td mat-cell *matCellDef="let cat">
+              <span class="count-badge">{{ cat.newsCount || 0 }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>Active</th>
+            <td mat-cell *matCellDef="let cat">
+              <mat-slide-toggle
+                [checked]="cat.isActive"
+                (change)="toggleActive(cat)"
+                color="primary">
+              </mat-slide-toggle>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let cat">
+              <button mat-icon-button color="primary" (click)="editCategory(cat)" matTooltip="Edit">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteCategory(cat)" matTooltip="Delete">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </div>
+
+      @if (!loading() && categories().length === 0) {
+        <div class="empty-state">
+          <mat-icon>category</mat-icon>
+          <p>No categories yet. Add your first category.</p>
+        </div>
+      }
+    </mat-card>
+
+    <!-- Add/Edit Form -->
+    @if (showForm()) {
+      <mat-card class="form-card">
+        <mat-card-header>
+          <mat-card-title>
+            {{ editingCategory() ? 'Edit Category' : 'Add New Category' }}
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Category Name *</mat-label>
+              <input matInput formControlName="name" placeholder="e.g. Exam Updates">
+              @if (categoryForm.get('name')?.hasError('required') && categoryForm.get('name')?.touched) {
+                <mat-error>Name is required</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Material Icon Name *</mat-label>
+              <input matInput formControlName="icon" placeholder="e.g. school, book, work">
+              <mat-icon matSuffix>{{ categoryForm.get('icon')?.value }}</mat-icon>
+              <mat-hint>
+                <a href="https://fonts.google.com/icons" target="_blank">Browse icons</a>
+              </mat-hint>
+            </mat-form-field>
+
+            <div class="color-section">
+              <label class="color-label">Color *</label>
+              <div class="color-grid">
+                @for (color of colorOptions; track color) {
+                  <div class="color-option"
+                       [style.background]="color"
+                       [class.selected]="categoryForm.get('color')?.value === color"
+                       (click)="categoryForm.patchValue({color: color})">
+                  </div>
+                }
+              </div>
+              <div class="selected-color">
+                <span [style.background]="categoryForm.get('color')?.value" class="color-dot"></span>
+                <span>{{ categoryForm.get('color')?.value }}</span>
+              </div>
+            </div>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" rows="2" placeholder="Optional description"></textarea>
+            </mat-form-field>
+
+            <div class="form-actions">
+              <button mat-raised-button color="primary" type="submit" [disabled]="formLoading()">
+                <mat-icon>{{ editingCategory() ? 'save' : 'add' }}</mat-icon>
+                {{ editingCategory() ? 'Update' : 'Create' }}
+              </button>
+              <button mat-stroked-button type="button" (click)="cancelForm()">Cancel</button>
+            </div>
+
+          </form>
+        </mat-card-content>
+      </mat-card>
+    }
+
+  </div>
+
+</div>

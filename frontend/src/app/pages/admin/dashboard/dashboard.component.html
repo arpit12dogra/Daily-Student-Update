@@ -1,0 +1,169 @@
+<div class="dashboard">
+
+  <!-- Welcome Banner -->
+  <div class="welcome-banner">
+    <div class="welcome-text">
+      <h1>{{ getGreeting() }}, {{ currentAdmin()?.username || 'Admin' }} 👋</h1>
+      <p>Here's what's happening with Daily Student Updates today.</p>
+    </div>
+    <div class="welcome-actions">
+      <a mat-raised-button color="accent" routerLink="/admin/add-news">
+        <mat-icon>add</mat-icon> Add News
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <mat-card class="stat-card stat-blue">
+      <mat-card-content>
+        <div class="stat-body">
+          <div class="stat-info">
+            <span class="stat-label">Total News</span>
+            <span class="stat-value">{{ stats().totalNews }}</span>
+          </div>
+          <mat-icon class="stat-icon">newspaper</mat-icon>
+        </div>
+        <a routerLink="/admin/manage-news" class="stat-link">View all →</a>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card stat-green">
+      <mat-card-content>
+        <div class="stat-body">
+          <div class="stat-info">
+            <span class="stat-label">Published</span>
+            <span class="stat-value">{{ stats().publishedNews }}</span>
+          </div>
+          <mat-icon class="stat-icon">check_circle</mat-icon>
+        </div>
+        <a routerLink="/admin/manage-news" class="stat-link">Manage →</a>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card stat-orange">
+      <mat-card-content>
+        <div class="stat-body">
+          <div class="stat-info">
+            <span class="stat-label">Categories</span>
+            <span class="stat-value">{{ stats().totalCategories }}</span>
+          </div>
+          <mat-icon class="stat-icon">category</mat-icon>
+        </div>
+        <a routerLink="/admin/categories" class="stat-link">Manage →</a>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card stat-purple">
+      <mat-card-content>
+        <div class="stat-body">
+          <div class="stat-info">
+            <span class="stat-label">Total Views</span>
+            <span class="stat-value">{{ stats().totalViews }}</span>
+          </div>
+          <mat-icon class="stat-icon">visibility</mat-icon>
+        </div>
+        <span class="stat-link">All time</span>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card stat-teal">
+      <mat-card-content>
+        <div class="stat-body">
+          <div class="stat-info">
+            <span class="stat-label">Today's News</span>
+            <span class="stat-value">{{ stats().todaysNews }}</span>
+          </div>
+          <mat-icon class="stat-icon">today</mat-icon>
+        </div>
+        <span class="stat-link">Published today</span>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card stat-pink">
+      <mat-card-content>
+        <div class="stat-body">
+          <div class="stat-info">
+            <span class="stat-label">Featured</span>
+            <span class="stat-value">{{ stats().featuredNews }}</span>
+          </div>
+          <mat-icon class="stat-icon">star</mat-icon>
+        </div>
+        <span class="stat-link">Featured articles</span>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Recent News -->
+  <mat-card class="recent-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>history</mat-icon> Recent News
+      </mat-card-title>
+      <span class="card-spacer"></span>
+      <a mat-button color="primary" routerLink="/admin/manage-news">View All</a>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-content class="recent-content">
+
+      @if (loading()) {
+        <div class="loading-state">
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+          <p>Loading recent news...</p>
+        </div>
+      } @else if (recentNews().length === 0) {
+        <div class="empty-state">
+          <mat-icon>inbox</mat-icon>
+          <p>No news yet. <a routerLink="/admin/add-news">Add your first news</a></p>
+        </div>
+      } @else {
+        <div class="news-list">
+          @for (news of recentNews(); track news._id) {
+            <div class="news-item">
+              <div class="news-info">
+                <span class="news-title">{{ news.title }}</span>
+                <span class="news-meta">
+                  <mat-icon>schedule</mat-icon>
+                  {{ news.createdAt | date:'d MMM yyyy' }}
+                  &nbsp;·&nbsp;
+                  <mat-icon>visibility</mat-icon> {{ news.viewCount }} views
+                </span>
+              </div>
+              <div class="news-badges">
+                @if (news.isPublished) {
+                  <span class="badge badge-success">Published</span>
+                } @else {
+                  <span class="badge badge-draft">Draft</span>
+                }
+                @if (news.isFeatured) {
+                  <span class="badge badge-featured">Featured</span>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Quick Actions -->
+  <div class="quick-actions">
+    <h2>Quick Actions</h2>
+    <div class="actions-grid">
+      <a mat-raised-button routerLink="/admin/add-news" class="action-btn">
+        <mat-icon>add_circle</mat-icon> Add News
+      </a>
+      <a mat-stroked-button routerLink="/admin/categories" class="action-btn">
+        <mat-icon>category</mat-icon> Manage Categories
+      </a>
+      <a mat-stroked-button routerLink="/admin/media" class="action-btn">
+        <mat-icon>upload_file</mat-icon> Upload Media
+      </a>
+      <a mat-stroked-button routerLink="/" target="_blank" class="action-btn">
+        <mat-icon>open_in_new</mat-icon> View Website
+      </a>
+    </div>
+  </div>
+
+</div>

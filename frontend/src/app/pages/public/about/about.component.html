@@ -1,0 +1,94 @@
+<div class="page-header">
+  <div class="container">
+    <h1><mat-icon>info</mat-icon> About Us</h1>
+    <p>Learn more about Daily Student Updates</p>
+  </div>
+</div>
+
+<div class="about-page">
+  <div class="container">
+    <!-- About Hero -->
+    <div class="about-hero">
+      <div class="row align-items-center">
+        <div class="col-lg-7">
+          <h2 style="font-size:2.2rem; font-weight:800; color:#1a237e; margin-bottom:16px">
+            Your School's Digital News Platform
+          </h2>
+          <p style="font-size:1.1rem; color:#424242; line-height:1.8; margin-bottom:24px">
+            Daily Student Updates is a comprehensive digital platform designed to keep students, parents,
+            and faculty connected with the latest news, events, and important announcements from our school.
+          </p>
+          <p style="color:#757575; line-height:1.8; margin-bottom:24px">
+            Founded with a mission to bridge the information gap in school communities, we provide timely,
+            accurate and relevant content that matters to everyone in our school ecosystem.
+          </p>
+          <a routerLink="/contact" mat-raised-button color="primary">
+            <mat-icon>contact_mail</mat-icon>
+            Get in Touch
+          </a>
+        </div>
+        <div class="col-lg-5 text-center d-none d-lg-block">
+          <mat-icon style="font-size:180px; width:180px; height:180px; color:#1976d2; opacity:0.15">school</mat-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="mb-5">
+      <h2 class="section-title text-center">What We Offer</h2>
+      <p class="section-subtitle text-center">Everything you need to stay connected</p>
+      <div class="row g-4 mt-2">
+        @for (feature of features; track feature.title) {
+          <div class="col-lg-3 col-md-6">
+            <div class="feature-card">
+              <div class="feature-icon" [style.background]="feature.bg">
+                <mat-icon [style.color]="feature.color">{{ feature.icon }}</mat-icon>
+              </div>
+              <h3 style="font-size:16px; font-weight:600; margin-bottom:8px">{{ feature.title }}</h3>
+              <p style="font-size:14px; color:#757575; margin:0">{{ feature.desc }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Stats Banner -->
+    <div class="stats-banner">
+      <div class="row">
+        <div class="col-md-3 col-6">
+          <span class="stat-num">500+</span>
+          <span class="stat-lbl">Articles Published</span>
+        </div>
+        <div class="col-md-3 col-6">
+          <span class="stat-num">50+</span>
+          <span class="stat-lbl">Categories</span>
+        </div>
+        <div class="col-md-3 col-6">
+          <span class="stat-num">10K+</span>
+          <span class="stat-lbl">Monthly Readers</span>
+        </div>
+        <div class="col-md-3 col-6">
+          <span class="stat-num">5+</span>
+          <span class="stat-lbl">Years Active</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team -->
+    <div class="mb-5">
+      <h2 class="section-title text-center">Our Team</h2>
+      <p class="section-subtitle text-center">The people behind Daily Student Updates</p>
+      <div class="row g-4 mt-2">
+        @for (member of team; track member.name) {
+          <div class="col-lg-3 col-md-6">
+            <div class="team-card">
+              <div class="team-avatar">{{ member.initial }}</div>
+              <h3 style="font-size:16px; font-weight:600; margin-bottom:4px">{{ member.name }}</h3>
+              <p style="font-size:13px; color:#757575; margin:0">{{ member.role }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

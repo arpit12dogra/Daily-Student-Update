@@ -1,0 +1,82 @@
+<mat-card class="news-card card-hover" [class.compact]="compact">
+  <!-- Image -->
+  <div class="card-image-wrapper">
+    <img [src]="imageUrl"
+         [alt]="news.title"
+         class="card-image"
+         loading="lazy"
+         (error)="$any($event.target).src='assets/images/news-placeholder.jpg'">
+
+    <!-- Category Badge -->
+    <span class="category-badge" [style.background-color]="categoryColor">
+      {{ categoryName }}
+    </span>
+
+    <!-- Featured Badge -->
+    @if (news.isFeatured) {
+      <span class="featured-badge">
+        <mat-icon>star</mat-icon>
+        Featured
+      </span>
+    }
+  </div>
+
+  <!-- Content -->
+  <mat-card-content class="card-content">
+    <!-- Meta -->
+    <div class="card-meta">
+      <span class="meta-date">
+        <mat-icon>calendar_today</mat-icon>
+        {{ formattedDate }}
+      </span>
+      <span class="meta-views">
+        <mat-icon>visibility</mat-icon>
+        {{ news.viewCount || 0 }}
+      </span>
+    </div>
+
+    <!-- Title -->
+    <h3 class="card-title">
+      <a [routerLink]="['/news', news._id]">{{ news.title }}</a>
+    </h3>
+
+    <!-- Excerpt -->
+    @if (!compact) {
+      <p class="card-excerpt">{{ excerptText }}</p>
+    }
+
+    <!-- Author -->
+    <div class="card-author">
+      <mat-icon>person</mat-icon>
+      <span>{{ news.author || 'Editorial Team' }}</span>
+    </div>
+  </mat-card-content>
+
+  <!-- Actions -->
+  <mat-card-actions class="card-actions">
+    <a [routerLink]="['/news', news._id]"
+       mat-button color="primary"
+       class="action-btn read-more">
+      <mat-icon>open_in_new</mat-icon>
+      Read More
+    </a>
+
+    @if (news.pdfUrl) {
+      <a [href]="news.pdfUrl"
+         target="_blank"
+         rel="noopener noreferrer"
+         mat-button color="accent"
+         class="action-btn">
+        <mat-icon>picture_as_pdf</mat-icon>
+        PDF
+      </a>
+    }
+
+    <button mat-icon-button
+            (click)="onShare($event)"
+            matTooltip="Share"
+            class="share-btn">
+      <mat-icon>share</mat-icon>
+    </button>
+  </mat-card-actions>
+</mat-card>

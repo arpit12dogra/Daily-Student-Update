@@ -1,0 +1,77 @@
+<div class="page-header">
+  <div class="container">
+    <h1><mat-icon>notifications</mat-icon> Important Notices</h1>
+    <p>Stay informed about important announcements and notifications</p>
+  </div>
+</div>
+
+<div class="notices-page">
+  <div class="container">
+    <div class="notices-controls mb-4">
+      <app-search-bar
+        placeholder="Search notices..."
+        (searchChanged)="onSearch($event)">
+      </app-search-bar>
+    </div>
+
+    @if (isLoading) {
+      <div class="loading-notices">
+        @for (i of [1,2,3,4,5]; track i) {
+          <div class="skeleton-notice"></div>
+        }
+      </div>
+    } @else if (notices.length > 0) {
+      <div class="notices-list">
+        @for (notice of notices; track notice._id) {
+          <mat-card class="notice-card card-hover">
+            <div class="notice-priority" [class.urgent]="notice.isFeatured">
+              <mat-icon>{{ notice.isFeatured ? 'priority_high' : 'info' }}</mat-icon>
+            </div>
+            <mat-card-content class="notice-content">
+              <div class="notice-header">
+                <h3 class="notice-title">
+                  <a [routerLink]="['/news', notice._id]">{{ notice.title }}</a>
+                </h3>
+                <div class="notice-badges">
+                  @if (notice.isFeatured) {
+                    <span class="badge-urgent">Urgent</span>
+                  }
+                  @if (notice.pdfUrl) {
+                    <span class="badge-pdf"><mat-icon>picture_as_pdf</mat-icon> PDF</span>
+                  }
+                </div>
+              </div>
+              <p class="notice-excerpt">{{ notice.excerpt }}</p>
+              <div class="notice-footer">
+                <div class="notice-meta">
+                  <span><mat-icon>calendar_today</mat-icon>{{ notice.publishedAt | date:'MMM d, y' }}</span>
+                  <span><mat-icon>person</mat-icon>{{ notice.author || 'Administration' }}</span>
+                </div>
+                <div class="notice-actions">
+                  <a [routerLink]="['/news', notice._id]" mat-button color="primary">
+                    Read More
+                  </a>
+                  @if (notice.pdfUrl) {
+                    <a [href]="notice.pdfUrl" target="_blank" mat-icon-button color="accent" matTooltip="Download PDF">
+                      <mat-icon>download</mat-icon>
+                    </a>
+                  }
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        }
+      </div>
+
+      @if (pagination) {
+        <app-pagination [pagination]="pagination" (pageChanged)="onPageChange($event)"></app-pagination>
+      }
+    } @else {
+      <div class="empty-state text-center py-5">
+        <mat-icon style="font-size:80px; opacity:0.3; display:block; margin: 0 auto 16px;">notifications_none</mat-icon>
+        <h3>No notices at this time</h3>
+        <p>Check back later for important announcements</p>
+      </div>
+    }
+  </div>
+</div>
