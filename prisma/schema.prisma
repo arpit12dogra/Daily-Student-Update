@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+}
+
+enum Category {
+  EXAM
+  PRIVATE_JOB
+  GOVT_JOB
+  FORM
+  COLLEGE_INFO
+  RESULT
+  ADMIT_CARD
+  SCHOLARSHIP
+  ROOM_PG
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(EDITOR)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  posts        Post[]
+}
+
+model Post {
+  id          String     @id @default(cuid())
+  title       String
+  slug        String     @unique
+  summary     String
+  content     String
+  category    Category
+  state       String
+  status      PostStatus @default(DRAFT)
+
+  lastDate    DateTime?
+  officialUrl String?
+  meta        Json?
+
+  publishedAt DateTime?
+  archivedAt  DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  createdById String
+  createdBy   User       @relation(fields: [createdById], references: [id])
+
+  attachments Attachment[]
+
+  @@index([status, publishedAt(sort: Desc)])
+  @@index([category, publishedAt(sort: Desc)])
+  @@index([state])
+  @@index([lastDate])
+}
+
+model Attachment {
+  id        String   @id @default(cuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  url       String
+  publicId  String
+  fileType  String
+  fileName  String?
+  sizeBytes Int?
+  createdAt DateTime @default(now())
+
+  @@index([postId])
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  userAgent String?
+  createdAt DateTime @default(now())
+}
+

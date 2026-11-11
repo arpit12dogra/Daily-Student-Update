@@ -1,6 +1,0 @@
-@DailyStudentUpdates.API_HostAddress = http://localhost:5147
-
-GET {{DailyStudentUpdates.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

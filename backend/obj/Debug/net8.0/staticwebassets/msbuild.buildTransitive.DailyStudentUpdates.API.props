@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\DailyStudentUpdates.API.props" />
-</Project>

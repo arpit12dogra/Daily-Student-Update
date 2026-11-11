@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/shared/components/pagination/pagination.component.scss"],
-  "sourcesContent": [".pagination-nav {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  gap: 4px;\r\n  padding: 20px 0;\r\n  flex-wrap: wrap;\r\n}\r\n\r\n.page-btn {\r\n  min-width: 40px !important;\r\n  height: 40px;\r\n  border-radius: 8px !important;\r\n  font-weight: 500;\r\n  color: #424242;\r\n  transition: all 0.2s;\r\n\r\n  &.active {\r\n    background: #1976d2 !important;\r\n    color: white !important;\r\n  }\r\n\r\n  &:hover:not(.active) {\r\n    background: #e3f2fd !important;\r\n    color: #1976d2;\r\n  }\r\n}\r\n\r\n.ellipsis {\r\n  padding: 0 8px;\r\n  color: #9e9e9e;\r\n  line-height: 40px;\r\n}\r\n\r\n.pagination-info {\r\n  font-size: 12px;\r\n  color: #9e9e9e;\r\n  margin-left: 12px;\r\n  white-space: nowrap;\r\n}\r\n"],
-  "mappings": ";AAAA,CAAA;AACE,WAAA;AACA,eAAA;AACA,mBAAA;AACA,OAAA;AACA,WAAA,KAAA;AACA,aAAA;;AAGF,CAAA;AACE,aAAA;AACA,UAAA;AACA,iBAAA;AACA,eAAA;AACA,SAAA;AACA,cAAA,IAAA;;AAEA,CARF,QAQE,CAAA;AACE,cAAA;AACA,SAAA;;AAGF,CAbF,QAaE,MAAA,KAAA,CALA;AAME,cAAA;AACA,SAAA;;AAIJ,CAAA;AACE,WAAA,EAAA;AACA,SAAA;AACA,eAAA;;AAGF,CAAA;AACE,aAAA;AACA,SAAA;AACA,eAAA;AACA,eAAA;;",
-  "names": []
-}

@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["contact.component.ts"],
-  "sourcesContent": ["\n    .contact-page { padding: 60px 0; }\n    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }\n    .contact-form-card { background: white; border-radius: 20px; padding: 40px; border: 1px solid #e0e0e0; }\n    .contact-info-item { display: flex; gap: 16px; margin-bottom: 24px; }\n    .info-icon { width: 48px; height: 48px; border-radius: 50%; background: #e3f2fd; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }\n    .info-icon mat-icon { color: #1976d2; }\n    .info-label { font-size: 12px; color: #9e9e9e; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }\n    .info-value { font-size: 14px; font-weight: 500; color: #212121; margin: 0; }\n    .w-100 { width: 100%; }\n  "],
-  "mappings": ";AACI,CAAA;AAAgB,WAAA,KAAA;;AAChB,CAAA;AAAa,aAAA;AAAmB,UAAA,EAAA;AAAgB,WAAA,EAAA;;AAChD,CAAA;AAAqB,cAAA;AAAmB,iBAAA;AAAqB,WAAA;AAAe,UAAA,IAAA,MAAA;;AAC5E,CAAA;AAAqB,WAAA;AAAe,OAAA;AAAW,iBAAA;;AAC/C,CAAA;AAAa,SAAA;AAAa,UAAA;AAAc,iBAAA;AAAoB,cAAA;AAAqB,WAAA;AAAe,eAAA;AAAqB,mBAAA;AAAyB,eAAA;;AAC9I,CADA,UACA;AAAsB,SAAA;;AACtB,CAAA;AAAc,aAAA;AAAiB,SAAA;AAAgB,kBAAA;AAA2B,kBAAA;AAAuB,iBAAA;;AACjG,CAAA;AAAc,aAAA;AAAiB,eAAA;AAAkB,SAAA;AAAgB,UAAA;;AACjE,CAAA;AAAS,SAAA;;",
-  "names": []
-}
