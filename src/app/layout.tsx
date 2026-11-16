@@ -11,6 +11,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXTAUTH_URL || "https://daily-student-update.vercel.app"),
   title: "StudentUpdates — Daily Exams, Govt Jobs, Admissions & Room Alerts",
   description:
     "Daily verified updates for college students: exams, HP & central government jobs, application forms, results, scholarships, admit cards, and room/PG availability in Himachal Pradesh & India.",
